@@ -1,0 +1,33 @@
+name: CI/CD Pipeline for Spring Boot Application on EC2 with Docker Compose
+
+on:
+  push:
+    branches:
+      - main  # Asegúrate de que esto coincida con el nombre de tu rama principal
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up SSH
+        uses: webfactory/ssh-agent@v0.5.3
+        with:
+          ssh-private-key: ${{ secrets.EC2_SSH_KEY }}
+
+      - name: Copy project files to server
+        run: |
+          ssh -o StrictHostKeyChecking=no ubuntu@${{ secrets.EC2_HOST }} <<'EOF'
+          cd /home/ubuntu/classcraft
+          git fetch --all
+          git reset --hard origin/main
+          docker-compose down
+          docker-compose up -d --build
+          EOF
+        shell: bash
