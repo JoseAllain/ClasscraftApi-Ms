@@ -1,8 +1,5 @@
 version: '3.8'
-name: lab
-
 services:
-
   db:
     image: postgres
     container_name: psql-db
@@ -12,14 +9,15 @@ services:
       - POSTGRES_DB=classcraft
     ports:
       - "5433:5432"
+    restart: always  # Asegura que reinicie siempre.
 
   microservicio:
-    container_name: Microservicio
+    container_name: classcraft-microservicio
     build:
       context: ./Microservicio
       dockerfile: Dockerfile
     ports:
-      - "8002:80"
+      - "8082:8080"
     environment:
       - SPRING_PROFILES_ACTIVE=default
       - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/classcraft
@@ -28,11 +26,12 @@ services:
       - SPRING_JPA_HIBERNATE_DDL_AUTO=update
     depends_on:
       - db
+    restart: on-failure  # Intenta reiniciar en caso de fallo.
 
   api:
-    container_name: classcraft_Api
+    container_name: classcraft-api
     build:
-      context: ./monolith
+      context: ./Api
       dockerfile: Dockerfile
     ports:
       - "8081:8080"
@@ -45,7 +44,4 @@ services:
     depends_on:
       - db
       - microservicio
-
-
-
-#este es nuestro proyecto
+    restart: on-failure  # Intenta reiniciar en caso de fallo.
