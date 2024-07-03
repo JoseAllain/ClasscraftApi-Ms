@@ -12,6 +12,7 @@ services:
       - POSTGRES_DB=classcraft
     ports:
       - "5433:5432"
+    restart: always
 
   microservicio:
     container_name: Microservicio
@@ -28,6 +29,7 @@ services:
       - SPRING_JPA_HIBERNATE_DDL_AUTO=update
     depends_on:
       - db
+    restart: on-failure
 
   api:
     container_name: Api
@@ -45,6 +47,7 @@ services:
     depends_on:
       - db
       - microservicio
+    restart: on-failure
 
 
 
