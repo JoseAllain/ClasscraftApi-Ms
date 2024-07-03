@@ -19,7 +19,7 @@ services:
       context: ./Microservicio
       dockerfile: Dockerfile
     ports:
-      - "8082:8080"
+      - "8002:80"
     environment:
       - SPRING_PROFILES_ACTIVE=default
       - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/classcraft
