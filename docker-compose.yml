@@ -14,7 +14,7 @@ services:
       - "5433:5432"
 
   microservicio:
-    container_name: classcraft_Microservicio
+    container_name: Microservicio
     build:
       context: ./Microservicio
       dockerfile: Dockerfile
